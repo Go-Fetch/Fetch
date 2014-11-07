@@ -1,0 +1,117 @@
+#!/usr/bin/python
+## -*- python -*-
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
+
+import ConfigParser
+import os
+import sys
+import argparse
+
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+try:
+    from fifo.helper import *
+except ImportError:
+    print 'PyFi must be installed to use this script. Please find PyFi at https://github.com/project-fifo/pyfi'
+    print 'Hint: git clone https://github.com/project-fifo/pyfi.git; cd pyfi; [sudo] python setup.py install'
+    print 'You must configure and run PyFi once before using this script.'
+    exit(1)
+
+    
+from fifo.api.wiggle import Wiggle
+from fifo.api.vm import VM
+
+
+from collections import defaultdict
+from pprint import pprint
+import json
+
+# constants
+
+DEFAULT_APIVERSION = "0.1.0"
+
+#First we initialize our configuration read the data and generate a default if needed
+
+config = ConfigParser.ConfigParser()
+config_file = os.environ.get('HOME') + "/.fifo"
+
+config.read(config_file);
+
+if not config.has_section('GENERAL'):
+    print ("Fifo client is not configured! Run 'fifo' to craete default config" )
+    exit(1)
+
+# Now we initialize our wiggle endpoint
+wiggle = Wiggle()
+
+
+# Parse the arguments ...
+parser = argparse.ArgumentParser(description='FiFo Ansible Dynamic Inventory.')
+parser.add_argument('--host', action='store_true', help='This returns empty. See info about _meta at: http://docs.ansible.com/developing_inventory.html')
+#parser.add_argument('--list', action='store_true')
+parser.add_argument('--version', '-v', action='version', version='%(prog)s 0.1.1')
+
+args, unknown = parser.parse_known_args()
+
+
+if args.host:
+    print '{}'
+    exit (0)
+
+active_config = config.get('GENERAL', 'active')
+
+if not config.has_section(active_config):
+    print("Active configuration " + active_config + " does not exist")
+    exit(1)
+
+
+apiVersion = config.get(active_config, 'apiVersion')
+host = config.get(active_config, 'host')
+user = config.get(active_config, 'user')
+pw = config.get(active_config, 'pass')
+
+token = False
+
+if config.has_option(active_config, 'token'):
+    token = config.get(active_config, 'token')
+
+wiggle.init(host, user, pw, token, apiVersion)
+#We check if we can get a valid token from wiggle and store it on our config
+if wiggle.get_token():
+    config.set(active_config, 'token', wiggle.get_token())
+with open(config_file, 'w') as configfile:
+    config.write(configfile)
+
+vm = VM(wiggle)
+
+l = vm.full_list(['config', 'metadata'])
+
+AnsibleList = lambda: defaultdict(AnsibleList)
+
+ansibleList = AnsibleList()
+
+for e in l:
+
+    a = d(e, ['config', 'hostname']) 
+    if a == '-':
+        a = d(e, ['config', 'alias']) 
+
+    n = d(e, ['config', 'networks'], [])
+    if len(n) > 0:
+        ansibleList['_meta']['hostvars'][a]['ansible_ssh_host'] = n[0]['ip']
+        groups = d(e, ['metadata', 'scm', 'groups'], [])
+
+    if 'scm' in e['metadata'] and 'hostvars' in e['metadata']['scm']:
+        for v in e['metadata']['scm']['hostvars']:
+            ansibleList['_meta']['hostvars'][a][v] = e['metadata']['scm']['hostvars'][v]
+
+    if len(groups) > 0:
+        for group in groups:
+            if "enabled" in groups[group] and groups[group]["enabled"] == "1":
+                if not group in ansibleList:
+                    ansibleList[group]['hosts'] = []
+                ansibleList[group]['hosts'].append(a)
+
+
+print(json.dumps(ansibleList, sort_keys=True, indent=2, separators=(',', ': ')))
+

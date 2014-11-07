@@ -1,0 +1,25 @@
+---
+# Deploy Python - This allows us other Ansible commands than raw
+
+  - name: Test if Python is installed
+    raw: "[ -f /opt/local/bin/python2.7 ] && echo -n \"1\" || echo -n \"0\""
+    ignore_errors: True
+    register: PythonTest
+
+  - name: Install Python
+    raw: "pkg_add http://pkgsrc.joyent.com/packages/SmartOS/2013Q3/x86_64/python/python27-2.7.5nb3.tgz"
+    when: PythonTest.stdout == "0"
+
+# Shell Shock Patch
+# Patched file from https://us-east.manta.joyent.com/rmustacc/public/sec/CVE-2014-6271/bash
+# SHA512 15471784801dbc3ce7ea156177fdefb45e5b18e55c44bb4822e777b64786bb466748662fb43ff261bb4f9b84ab1ff1bbc796bde31e8dc3e960ca808bbddad8cb
+  - name: Check for Shellshock ** THIS TASK SHOULD FAIL! **
+    command: "env x='() { :;}; echo -n 1' bash -c \"\""
+    ignore_errors: True
+    register: SSVulnerable
+  - name: Download patched bash
+    copy: src=bash dest=/var/tmp/bash owner=root group=bin mode="555"
+    when: SSVulnerable.stdout == "1"
+  - name: Apply patched bash
+    command: "mount -O -F lofs /var/tmp/bash /usr/bin/bash"
+    when: SSVulnerable.stdout == "1"

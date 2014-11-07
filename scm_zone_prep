@@ -1,0 +1,7 @@
+#!/bin/bash
+fifo vms metadata "$1" set scm.hostvars.ansible_python_interpreter "/opt/local/bin/python2.7"
+fifo vms metadata "$1" set scm.hostvars.ansible_ssh_user "root"
+ip=$(./uuid2ip "$1")
+ssh -t root@$ip "mail && pkgin up; pkgin -y in python27"
+#ansible -m raw "pkgin up; pkgin -y in python27"
+#python27

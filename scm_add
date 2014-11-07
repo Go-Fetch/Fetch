@@ -1,0 +1,2 @@
+#!/bin/bash
+fifo vms metadata "$1" set scm.groups."$2".enabled 1
