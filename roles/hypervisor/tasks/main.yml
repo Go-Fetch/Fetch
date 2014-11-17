@@ -18,9 +18,11 @@
     register: SSVulnerable
     changed_when: SSVulnerable.rc != 2
     ignore_errors: True
+
   - name: Download patched bash
     copy: src=bash dest=/var/tmp/bash owner=root group=bin mode="555"
     when: SSVulnerable.stdout == "1"
+    
   - name: Apply patched bash
     command: "mount -O -F lofs /var/tmp/bash /usr/bin/bash"
     when: SSVulnerable.stdout == "1"
