@@ -15,8 +15,9 @@
 # SHA512 15471784801dbc3ce7ea156177fdefb45e5b18e55c44bb4822e777b64786bb466748662fb43ff261bb4f9b84ab1ff1bbc796bde31e8dc3e960ca808bbddad8cb
   - name: Check for Shellshock ** THIS TASK SHOULD FAIL! **
     command: "env x='() { :;}; echo -n 1' bash -c \"\""
-    ignore_errors: True
     register: SSVulnerable
+    changed_when: SSVulnerable.rc != 2
+    ignore_errors: True
   - name: Download patched bash
     copy: src=bash dest=/var/tmp/bash owner=root group=bin mode="555"
     when: SSVulnerable.stdout == "1"
