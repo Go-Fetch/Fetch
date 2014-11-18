@@ -1,7 +1,40 @@
 #! /bin/bash
 cd roles
-mkdir "$1"
+if [ ! -d "$1" ]; then mkdir "$1" fi
 cd "$1"
-mkdir files handlers meta tasks templates vars
-cd tasks
-touch main.yml
+
+if [ ! -d "files" ]; then
+	mkdir files 
+fi
+
+if [ ! -d "handlers" ]; then
+	mkdir handlers 
+	cd handlers
+	touch main.yml
+	cd ..
+fi
+
+if [ ! -d "meta" ]; then
+	mkdir meta 
+	cd meta
+	touch main.yml
+	cd ..
+fi
+
+if [ ! -d "tasks" ]; then
+	mkdir tasks 
+	cd tasks
+	touch main.yml
+	cd ..
+fi
+
+if [ ! -d "templates" ]; then
+	mkdir templates 
+fi
+
+if [ ! -d "vars" ]; then
+	mkdir vars 
+	cd vars
+	touch main.yml
+	cd ..
+fi
