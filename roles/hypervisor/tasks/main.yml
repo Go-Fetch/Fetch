@@ -1,15 +1,15 @@
 ---
-# Deploy Python - This allows us to use other Ansible commands than "raw"
+
+  # Deploy Python - This allows us to use other Ansible commands than "raw"
 
   # A simple check if python is alreay installed.
   - name: Test if Python is installed  # This is just a name we give the task. It can be anything.
-    raw: "[ -f /opt/local/bin/python2.7 ] && echo -n \"1\" || echo -n \"0\"" # The task we want to run.
+    raw: "[ -f /opt/local/bin/python2.7 ] && echo -n \"1\" || echo -n \"0\""  # The task we want to run.
     register: PythonTest # Save the output to a variable called "PythonTest"
 
-  # Here we do the actual installation. We could setup pkgin, but for one package
-  # it is not necessary. Also not having it keeps a bit of clutter out of our gz.
+  # Here we do the actual installation.
   - name: Install Python 
-    raw: "pkg_add http://pkgsrc.joyent.com/packages/SmartOS/2013Q3/x86_64/python/python27-2.7.5nb3.tgz"
+    script: python_install.sh
     when: PythonTest.stdout != "1" # Only run this command if the stdout stored in "PythonTest" is "1"
 
 
@@ -30,12 +30,13 @@
   # In this first step we check to see if the hypervisor is vulnerable
   # It is possible to craft a check that will return success on absence of the vulerability
   # but we prefer this method because it uses the standard check
-  - name: Check for Shellshock ** THIS TASK SHOULD FAIL! **
+  - name: Check for Shellshock
     command: "env x='() { :;}; echo -n 1' bash -c \"\""
     register: SSVulnerable
-    changed_when: SSVulnerable.rc != 2 # Notify operator of vulnerability when rc is not 2 (failure)
+    changed_when: SSVulnerable.stdout == "1" # Notify operator of vulnerability when return is 1 (failure)
+    failed_when: SSVulnerable.stdout == "1"
     ignore_errors: True # Ansible will typically stop processing plays if it comes across an error.
-                        # We expect an error so we instruct processing to continue
+                        # We expect an error if not patched, but we want to fix it so we instruct processing to continue
 
   - name: Download patched bash
     copy: src=bash dest=/var/tmp/bash owner=root group=bin mode="555" # Copy patched file from local "files" folder
@@ -45,3 +46,10 @@
   - name: Apply patched bash
     command: "mount -O -F lofs /var/tmp/bash /usr/bin/bash" # Use command to run system commnad (mount)
     when: SSVulnerable.stdout == "1"
+
+
+# Update NTP Servers
+
+  - name: Configure NTP Servers
+    copy: src=ntp.conf dest=/etc/inet/ntp.conf
+
