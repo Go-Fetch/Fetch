@@ -75,7 +75,7 @@ token = False
 if config.has_option(active_config, 'token'):
     token = config.get(active_config, 'token')
 
-wiggle.init(host, user, pw, token, apiVersion)
+wiggle.init(host, user, pw, token, apiVersion, [])
 #We check if we can get a valid token from wiggle and store it on our config
 if wiggle.get_token():
     config.set(active_config, 'token', wiggle.get_token())
