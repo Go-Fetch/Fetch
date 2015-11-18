@@ -1,0 +1,56 @@
+#!/usr/bin/env escript
+%% -*- erlang -*-
+%%! -smp enable -mnesia debug verbose
+main([Target, Cookie, GroupingUUID, ElementUUID]) ->
+    % Connection setup
+    os:cmd("epmd&"),
+	IP = primaryip(),
+    NodeName = list_to_atom("clitool@" ++ IP),
+	{ok,_} = net_kernel:start([NodeName]),
+	erlang:set_cookie(node(),list_to_atom(Cookie)),
+	RemoteNode = list_to_atom(Target),
+	pong = net_adm:ping(RemoteNode),
+
+	%Prep Input
+	GroupingUUID1 = list_to_binary(GroupingUUID),
+	ElementUUID1 = list_to_binary(ElementUUID),
+
+	%Run remote command
+	Result1 = rpc:call(RemoteNode, sniffle_grouping, add_element, [GroupingUUID1, ElementUUID1]),
+
+	case Result1 of
+		ok ->
+			halt(0);
+		_ ->
+			halt(1)
+	end;
+
+main(_) ->
+    usage().
+
+primaryip() ->
+	R = primaryif(),
+	{ok,[{addr, IP}]} = inet:ifget(R, [addr]),
+	IP1 = inet_parse:ntoa(IP),
+	IP1.
+
+primaryif() ->
+	{ok, List} = inet:getiflist(),
+	primaryif(List).
+
+primaryif([If|T]) ->
+	case string:str(If, "lo") of
+		0 -> If;
+		_ -> primaryif(T)
+	end;
+primaryif(If) ->
+	case string:str(If, "lo") of
+		0 -> If;
+		_ -> false
+	end;
+primaryif(_) ->
+	false.
+
+usage() ->
+    io:format("usage: fake_grouping sniffle_node cookie grouping_uuid element_uuid~n"),
+    halt(1).

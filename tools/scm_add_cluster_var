@@ -1,0 +1,2 @@
+#!/bin/bash
+fifo groupings metadata "$1" set scm.vars."$2" "$3"

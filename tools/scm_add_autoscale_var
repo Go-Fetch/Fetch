@@ -1,0 +1,2 @@
+#!/bin/bash
+fifo groupings metadata "$1" set scm.autoscale."$2" "$3"

@@ -1,0 +1,27 @@
+[submodule "roles/fifo-sniffle"]
+	path = roles/fifo-sniffle
+	url = https://github.com/Go-Fetch/fifo-sniffle.git
+[submodule "roles/fifo-snarl"]
+	path = roles/fifo-snarl
+	url = https://github.com/Go-Fetch/fifo-snarl.git
+[submodule "roles/fifo-howl"]
+	path = roles/fifo-howl
+	url = https://github.com/Go-Fetch/fifo-howl.git
+[submodule "roles/fifo-wiggle"]
+	path = roles/fifo-wiggle
+	url = https://github.com/Go-Fetch/fifo-wiggle.git
+[submodule "roles/fifo-jingles"]
+	path = roles/fifo-jingles
+	url = https://github.com/Go-Fetch/fifo-jingles.git
+[submodule "roles/fifo-chunter"]
+	path = roles/fifo-chunter
+	url = https://github.com/Go-Fetch/fifo-chunter.git
+[submodule "roles/leofs-manager"]
+	path = roles/leofs-manager
+	url = https://github.com/Go-Fetch/leofs-manager.git
+[submodule "roles/leofs-gateway"]
+	path = roles/leofs-gateway
+	url = https://github.com/Go-Fetch/leofs-gateway.git
+[submodule "roles/leofs-storage"]
+	path = roles/leofs-storage
+	url = https://github.com/Go-Fetch/leofs-storage.git

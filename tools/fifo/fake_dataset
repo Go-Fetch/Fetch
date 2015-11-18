@@ -1,0 +1,73 @@
+#!/usr/bin/env escript
+%% -*- erlang -*-
+%%! -smp enable -mnesia debug verbose
+
+% Test Usage
+% ./fake_dataset "sniffle@172.16.2.70" erlang "1bd84670-055a-11e5-aaa2-0346bb21d5a1" "minimal-64-lts" "14.4.2"
+
+main([Target, Cookie, DatasetUUID, DatasetName, DatasetVersion]) ->
+    % Connection setup
+    os:cmd("epmd&"),
+	IP = primaryip(),
+    NodeName = list_to_atom("clitool@" ++ IP),
+	{ok,_} = net_kernel:start([NodeName]),
+	erlang:set_cookie(node(),list_to_atom(Cookie)),
+	RemoteNode = list_to_atom(Target),
+	pong = net_adm:ping(RemoteNode),
+
+	%Prep Input
+	Ds = list_to_binary(DatasetUUID),
+	DsName = list_to_binary(DatasetName),
+	DsVer = list_to_binary(DatasetVersion),
+
+	%Run remote command
+	Result1 = rpc:call(RemoteNode, sniffle_dataset, create, [Ds]),
+	Result2 = rpc:call(RemoteNode, sniffle_dataset, imported, [Ds, true]),
+	Result3 = rpc:call(RemoteNode, sniffle_dataset, name, [Ds, DsName]),
+	Result4 = rpc:call(RemoteNode, sniffle_dataset, version, [Ds, DsVer]),
+	Result5 = rpc:call(RemoteNode, sniffle_dataset, add_network, [Ds, {<<"net0">>, <<"Primary">>}]),
+	rpc:call(RemoteNode, sniffle_dataset, type, [Ds, <<"zone">>]),
+
+	io:format("Create: ~p~n", [Result1]),
+	io:format("Mark Imported: ~p~n", [Result2]),
+	io:format("Set Name: ~p~n", [Result3]),
+	io:format("Set Version: ~p~n", [Result4]),
+	io:format("Add Network Interface: ~p~n", [Result5]);
+
+main([Target, Cookie, DatasetUUID, DatasetName]) ->
+	main([Target, Cookie, DatasetUUID, DatasetName, "0.0"]);
+main([Target, Cookie, DatasetUUID]) ->
+	main([Target, Cookie, DatasetUUID, "public", "0.0"]);
+main(_) ->
+    usage().
+
+primaryip() ->
+	R = primaryif(),
+	{ok,[{addr, IP}]} = inet:ifget(R, [addr]),
+	IP1 = inet_parse:ntoa(IP),
+	IP1.
+
+primaryif() ->
+	{ok, List} = inet:getiflist(),
+	primaryif(List).
+
+primaryif([If|T]) ->
+	case string:str(If, "lo") of
+		0 -> If;
+		_ -> primaryif(T)
+	end;
+primaryif(If) ->
+	case string:str(If, "lo") of
+		0 -> If;
+		_ -> false
+	end;
+primaryif(_) ->
+	false.
+
+usage() ->
+    io:format("usage: fake_dataset sniffle_node cookie dataset_uuid [dataset_name version]\n"),
+    halt(1).
+
+
+
+
