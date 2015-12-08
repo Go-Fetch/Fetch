@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+main (){
+	RED='\033[0;31m'
+	GRN='\033[0;32m'
+	NC='\033[0m'
+
+	current=$(./current_versions)
+
+	printf "\033[1mPackage\tConfigured \tAvailable\033[0m\n"
+
+	for PKG in howl snarl sniffle
+	do
+		version=$(awk -F ":" '/'${PKG}'_version_required/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
+		rel=$(awk -F ":" '/'${PKG}'_release/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
+		if [[ $current == *"pkg/$rel/$version"* ]]
+		then
+		  printf "${GRN}fifo-${PKG}\t${version}\t${version}${NC}\n"
+		else
+			needed=$(echo "${current}" | grep pkg/${rel}/fifo-${PKG})
+			printf "${RED}fifo-${PKG}\t${version}\t${needed}${NC}\n"
+		fi
+	done
+
+	for PKG in gateway manager storage
+	do
+		version=$(awk -F ":" '/leofs_'${PKG}'_version_required/ {print $2}' ../../roles/leofs-${PKG}/vars/main.yml | tr -d ' ')
+		rel=$(awk -F ":" '/leofs_release/ {print $2}' ../../roles/leofs-${PKG}/vars/main.yml | tr -d ' ')
+		if [[ $current == *"pkg/$rel/$version"* ]]
+		then
+		  printf "${GRN}leo-${PKG}\t${version}\t${version}${NC}\n"
+		else
+			needed=$(echo "${current}" | grep pkg/${rel}/leo_${PKG})
+			printf "${RED}leo-${PKG}\t${version}\t${needed}${NC}\n"
+		fi
+	done
+
+}
+
+main | column -t
