@@ -7,12 +7,6 @@
 [submodule "roles/fifo-howl"]
 	path = roles/fifo-howl
 	url = https://github.com/Go-Fetch/fifo-howl.git
-[submodule "roles/fifo-wiggle"]
-	path = roles/fifo-wiggle
-	url = https://github.com/Go-Fetch/fifo-wiggle.git
-[submodule "roles/fifo-jingles"]
-	path = roles/fifo-jingles
-	url = https://github.com/Go-Fetch/fifo-jingles.git
 [submodule "roles/fifo-chunter"]
 	path = roles/fifo-chunter
 	url = https://github.com/Go-Fetch/fifo-chunter.git

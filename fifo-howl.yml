@@ -1,0 +1,3 @@
+- hosts: fifo-howl-nodes
+  roles:
+    - fifo-howl

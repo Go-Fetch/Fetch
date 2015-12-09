@@ -1,0 +1,3 @@
+- hosts: fifo-snarl-nodes
+  roles:
+    - fifo-snarl
