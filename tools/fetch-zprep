@@ -1,0 +1,3 @@
+#!/bin/bash
+fifo vms metadata "$1" set scm.hostvars.ansible_python_interpreter "/opt/local/bin/python2.7"
+fifo vms metadata "$1" set scm.hostvars.ansible_ssh_user "root"

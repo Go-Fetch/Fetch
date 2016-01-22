@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+cd "$( dirname "${BASH_SOURCE[0]}" )"
+
+
+update (){
+	RED='\033[0;31m'
+	GRN='\033[0;32m'
+	NC='\033[0m'
+
+	for PKG in cerberus howl snarl sniffle
+	do
+		rel=$(awk -F ":" '/'${PKG}'_release/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
+		version=$(awk -F ":" '/'${PKG}'_version_required/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
+		mkdir -p ../../roles/fifo-${PKG}/files/cache/$rel
+		if [[ -f ../../roles/fifo-${PKG}/files/cache/$rel/$version.tgz ]]; then
+			[[ "$(curl https://release.project-fifo.net/pkg/$rel/$version.tgz -z ../../roles/fifo-${PKG}/files/cache/$rel/$version.tgz -o ../../roles/fifo-${PKG}/files/cache/$rel/$version.tgz -s -w %{http_code})" == "200" ]] && echo "Cached package for fifo-${PKG} updated."
+		else
+			echo "Cache does not exist for fifo-${PKG}. Downloading..."
+			curl https://release.project-fifo.net/pkg/$rel/$version.tgz -o ../../roles/fifo-${PKG}/files/cache/$rel/$version.tgz -s
+		fi
+	done
+
+	for PKG in gateway manager storage
+	do
+		rel=$(awk -F ":" '/leofs_release/ {print $2}' ../../roles/leofs-${PKG}/vars/main.yml | tr -d ' ')
+		version=$(awk -F ":" '/leofs_'${PKG}'_version_required/ {print $2}' ../../roles/leofs-${PKG}/vars/main.yml | tr -d ' ')
+		mkdir -p ../../roles/leofs-${PKG}/files/cache/$rel
+		if [[ -f ../../roles/leofs-${PKG}/files/cache/$rel/$version.tgz ]]; then
+			[[ "$(curl https://release.project-fifo.net/pkg/$rel/$version.tgz -z ../../roles/leofs-${PKG}/files/cache/$rel/$version.tgz -o ../../roles/leofs-${PKG}/files/cache/$rel/$version.tgz -s -w %{http_code})" == "200" ]] && echo "Cached package for leofs-${PKG} updated."
+		else
+			echo "Cache does not exist for leofs-${PKG}. Downloading..."
+			curl https://release.project-fifo.net/pkg/$rel/$version.tgz -o ../../roles/leofs-${PKG}/files/cache/$rel/$version.tgz -s
+		fi
+	done
+}
+
+empty (){
+	for PKG in cerberus howl snarl sniffle
+	do
+		rm -r ../../roles/fifo-${PKG}/files/cache 2>/dev/null
+	done
+
+	for PKG in gateway manager storage
+	do
+		rm -r ../../roles/leofs-${PKG}/files/cache 2>/dev/null
+	done
+}
+
+if [ "$1" == "clear" ]; then
+  empty
+else
+	update
+fi
+

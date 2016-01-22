@@ -1,0 +1,15 @@
+#!/bin/bash
+TARGET=$1
+COOKIE=$2
+STACKNAME=$3
+CLUSTERNAME=$4
+VM=$5
+
+STACK=`fifo groupings create --type stack $STACKNAME | awk '{print $4}'`
+CLUSTER=`fifo groupings create --type cluster $CLUSTERNAME | awk '{print $4}'`
+
+fifo groupings add $STACK cluster $CLUSTER
+#fifo groupings add $CLUSTER vm $VM
+
+#fake_grouping sniffle_node cookie grouping_uuid element_uuid
+./fake_grouping $TARGET $COOKIE $CLUSTER $VM

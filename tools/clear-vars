@@ -1,0 +1,24 @@
+sed "/^chunter_cookie:/s/:.*/: <<chunter_cookie>>/" ../roles/fifo-chunter/vars/main.yml > ../roles/fifo-chunter/vars/main.yml.tmp && mv ../roles/fifo-chunter/vars/main.yml.tmp ../roles/fifo-chunter/vars/main.yml
+
+sed "/^howl_cookie:/s/:.*/: <<howl_cookie>>/" ../roles/fifo-howl/vars/main.yml > ../roles/fifo-howl/vars/main.yml.tmp && mv ../roles/fifo-howl/vars/main.yml.tmp ../roles/fifo-howl/vars/main.yml
+
+sed "/^snarl_cookie:/s/:.*/: <<snarl_cookie>>/" ../roles/fifo-snarl/vars/main.yml > ../roles/fifo-snarl/vars/main.yml.tmp && mv ../roles/fifo-snarl/vars/main.yml.tmp ../roles/fifo-snarl/vars/main.yml
+
+sed "/^sniffle_cookie:/s/:.*/: <<sniffle_cookie>>/" ../roles/fifo-sniffle/vars/main.yml > ../roles/fifo-sniffle/vars/main.yml.tmp && mv ../roles/fifo-sniffle/vars/main.yml.tmp ../roles/fifo-sniffle/vars/main.yml
+
+sed "/^leofs_cookie:/s/:.*/: <<leofs_cookie>>/" ../roles/leofs-gateway/vars/main.yml > ../roles/leofs-gateway/vars/main.yml.tmp && mv ../roles/leofs-gateway/vars/main.yml.tmp ../roles/leofs-gateway/vars/main.yml
+sed "/^leofs_master:/s/:.*/: <<leofs_master>>/" ../roles/leofs-gateway/vars/main.yml > ../roles/leofs-gateway/vars/main.yml.tmp && mv ../roles/leofs-gateway/vars/main.yml.tmp ../roles/leofs-gateway/vars/main.yml
+sed "/^leofs_slave:/s/:.*/: <<leofs_slave>>/" ../roles/leofs-gateway/vars/main.yml > ../roles/leofs-gateway/vars/main.yml.tmp && mv ../roles/leofs-gateway/vars/main.yml.tmp ../roles/leofs-gateway/vars/main.yml
+
+sed "/^leofs_cookie:/s/:.*/: <<leofs_cookie>>/" ../roles/leofs-manager/vars/main.yml > ../roles/leofs-manager/vars/main.yml.tmp && mv ../roles/leofs-manager/vars/main.yml.tmp ../roles/leofs-manager/vars/main.yml
+sed "/^leofs_master:/s/:.*/: <<leofs_master>>/" ../roles/leofs-manager/vars/main.yml > ../roles/leofs-manager/vars/main.yml.tmp && mv ../roles/leofs-manager/vars/main.yml.tmp ../roles/leofs-manager/vars/main.yml
+sed "/^leofs_slave:/s/:.*/: <<leofs_slave>>/" ../roles/leofs-manager/vars/main.yml > ../roles/leofs-manager/vars/main.yml.tmp && mv ../roles/leofs-manager/vars/main.yml.tmp ../roles/leofs-manager/vars/main.yml
+sed "/^leofs_replicaN:/s/:.*/: <<leofs_replicaN>>/" ../roles/leofs-manager/vars/main.yml > ../roles/leofs-manager/vars/main.yml.tmp && mv ../roles/leofs-manager/vars/main.yml.tmp ../roles/leofs-manager/vars/main.yml
+sed "/^leofs_replicaR:/s/:.*/: <<leofs_replicaR>>/" ../roles/leofs-manager/vars/main.yml > ../roles/leofs-manager/vars/main.yml.tmp && mv ../roles/leofs-manager/vars/main.yml.tmp ../roles/leofs-manager/vars/main.yml
+sed "/^leofs_replicaW:/s/:.*/: <<leofs_replicaW>>/" ../roles/leofs-manager/vars/main.yml > ../roles/leofs-manager/vars/main.yml.tmp && mv ../roles/leofs-manager/vars/main.yml.tmp ../roles/leofs-manager/vars/main.yml
+sed "/^leofs_replicaD:/s/:.*/: <<leofs_replicaD>>/" ../roles/leofs-manager/vars/main.yml > ../roles/leofs-manager/vars/main.yml.tmp && mv ../roles/leofs-manager/vars/main.yml.tmp ../roles/leofs-manager/vars/main.yml
+sed "/^leofs_replicaRAR:/s/:.*/: <<leofs_replicaRAR>>/" ../roles/leofs-manager/vars/main.yml > ../roles/leofs-manager/vars/main.yml.tmp && mv ../roles/leofs-manager/vars/main.yml.tmp ../roles/leofs-manager/vars/main.yml
+
+sed "/^leofs_cookie:/s/:.*/: <<leofs_cookie>>/" ../roles/leofs-storage/vars/main.yml > ../roles/leofs-storage/vars/main.yml.tmp && mv ../roles/leofs-storage/vars/main.yml.tmp ../roles/leofs-storage/vars/main.yml
+sed "/^leofs_master:/s/:.*/: <<leofs_master>>/" ../roles/leofs-storage/vars/main.yml > ../roles/leofs-storage/vars/main.yml.tmp && mv ../roles/leofs-storage/vars/main.yml.tmp ../roles/leofs-storage/vars/main.yml
+sed "/^leofs_slave:/s/:.*/: <<leofs_slave>>/" ../roles/leofs-storage/vars/main.yml > ../roles/leofs-storage/vars/main.yml.tmp && mv ../roles/leofs-storage/vars/main.yml.tmp ../roles/leofs-storage/vars/main.yml
