@@ -1,19 +1,19 @@
 #/usr/bin/env bash
-PACKAGE="daa041dc-a533-439a-bad6-1aa587dc4290"
-DATASET="1bd84670-055a-11e5-aaa2-0346bb21d5a1"
-NET="f6f613f6-5968-4858-819c-297533c89546"
+PACKAGE="e68127bd-64c6-43c5-9996-57c356d93d28"
+DATASET="b67492c2-055c-11e5-85d8-8b039ac981ec"
+NET="50041104-c1aa-4deb-ab1c-fb570c7b3ff2"
 
 STACK=`fifo groupings create --type stack cluster-test-stack | awk '{print $4}'`
 CLUSTER=`fifo groupings create --type cluster cluster-test-cluster | awk '{print $4}'`
 
 fifo groupings add $STACK cluster $CLUSTER
 
-./scm_add_autoscale_var $CLUSTER target 10
-./scm_add_autoscale_var $CLUSTER package $PACKAGE
-./scm_add_autoscale_var $CLUSTER dataset $DATASET
-./scm_add_autoscale_var $CLUSTER template.networks.net0 $NET
-./scm_add_autoscale_var $CLUSTER template.domain "cluster-test-vm"
-#./scm_add_autoscale_var $CLUSTER template.grouping $CLUSTER
+./fetch-avar $CLUSTER target 10
+./fetch-avar $CLUSTER package $PACKAGE
+./fetch-avar $CLUSTER dataset $DATASET
+./fetch-avar $CLUSTER template.networks.net0 $NET
+./fetch-avar $CLUSTER template.domain "cluster-test.tld"
+./fetch-avar $CLUSTER template.grouping $CLUSTER
 ./rescale $CLUSTER
 
 # for i in {1..4}

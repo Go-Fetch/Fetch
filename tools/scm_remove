@@ -1,2 +1,0 @@
-#!/bin/bash
-fifo vms metadata "$1" delete scm.roles."$2".enabled

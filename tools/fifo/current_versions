@@ -2,6 +2,7 @@
 
 import urllib2
 import xml.etree.ElementTree as ET
+from distutils.version import LooseVersion, StrictVersion
 
 site= "http://release.project-fifo.net"
 hdr = {'User-Agent': 'Current Version Tool - Fetch'}
@@ -27,8 +28,10 @@ for node in root.findall('{http://s3.amazonaws.com/doc/2006-03-01/}Contents'):
 		if len(version_parts) > 2:
 			version_parts.pop()
 			version = ".".join(version_parts)
-			if (not name in current) or (current[name] < version):
+			if (not name in current) or (LooseVersion(current[name]) < LooseVersion(version)):
 				current[name] = version
 
-for k,v in sorted(current.items()):
+#current.sort(key=lambda s: map(int, s.split('.')))
+
+for k,v in current.items():
     print k + '-' + v

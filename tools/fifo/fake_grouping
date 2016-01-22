@@ -20,6 +20,7 @@ main([Target, Cookie, GroupingUUID, ElementUUID]) ->
 
 	case Result1 of
 		ok ->
+			io:format("Successfully faked grouping.~n"),
 			halt(0);
 		_ ->
 			halt(1)
