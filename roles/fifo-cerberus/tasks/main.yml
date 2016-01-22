@@ -1,0 +1,12 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Lookup version of Cerberus
+  shell: "pkgin list | grep fifo-cerberus | awk -F'[;]' '{print $1}'"
+  register: cerberus_version_installed
+  changed_when: "cerberus_version_installed.stdout != '{{ cerberus_version_required }}'"
+  ignore_errors: True
+
+- include: install.yml
+  when: "cerberus_version_installed.stdout != '{{ cerberus_version_required }}'"
