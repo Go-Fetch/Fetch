@@ -1,0 +1,41 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Lookup version of Sniffle
+  shell: "pkgin list | grep fifo-sniffle | awk -F'[;]' '{print $1}'"
+  register: sniffle_version_installed
+  changed_when: "sniffle_version_installed.stdout != '{{ sniffle_version_required }}'"
+  ignore_errors: True
+
+- include: install.yml
+  when: "sniffle_version_installed.stdout != '{{ sniffle_version_required }}'"
+
+- name: Configure Sniffle
+  template: src=sniffle-config.j2 dest=/opt/local/fifo-sniffle/etc/sniffle.conf backup=yes
+  notify: Bounce Sniffle
+
+- name: Enable EPMD
+  service: name=epmd state=started enabled=yes
+  when: "'sniffle_no_start' not in {{ group_names }}"
+
+- name: Enable Sniffle
+  service: name=sniffle state=started enabled=yes
+  when: "'sniffle_no_start' not in {{ group_names }}"
+  register: sniffle_service_start
+
+- name: Pause for Sniffle Startup
+  pause: seconds=20
+  when: "sniffle_service_start.changed == True"
+
+- name: Check Sniffle Ring Membership
+  script: members
+  register: sniffle_ring_membership
+  changed_when: "sniffle_ring_membership.stdout.find('{{ sniffle_ring_leader_ip }}') == -1"
+  when: "'{{ sniffle_ring_leader_ip }}' != '{{ ansible_default_ipv4['address'] }}'"
+
+# - debug: var=sniffle_ring_membership
+
+# - include: join.yml
+#   serial: 1
+#   when: "sniffle_ring_membership.changed == True"

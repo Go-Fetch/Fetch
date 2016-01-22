@@ -1,0 +1,6 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Join Sniffle Ring
+  shell: "sniffle-admin cluster join {{ sniffle_ring_leader_ip }}"

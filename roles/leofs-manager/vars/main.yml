@@ -1,0 +1,15 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+leofs_release: rel
+leofs_manager_version_required: leo_manager-1.2.16
+leofs_cookie: <<leofs_cookie>>
+leofs_master: <<leofs_master>>
+leofs_slave: <<leofs_slave>>
+leofs_replicaN: <<leofs_replicaN>>
+leofs_replicaR: <<leofs_replicaR>>
+leofs_replicaW: <<leofs_replicaW>>
+leofs_replicaD: <<leofs_replicaD>>
+leofs_replicaRAR: <<leofs_replicaRAR>>
+fifo_gpg_keyid: BB975564

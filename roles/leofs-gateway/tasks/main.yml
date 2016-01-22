@@ -1,0 +1,23 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Lookup version of LeoFS Gateway
+  shell: "pkgin list | grep leo_gateway | awk -F'[;]' '{print $1}'"
+  register: leofs_version_installed
+  changed_when: "leofs_version_installed.stdout != '{{ leofs_gateway_version_required }}'"
+  ignore_errors: True
+
+- include: install.yml
+  when: "leofs_version_installed.stdout != '{{ leofs_gateway_version_required }}'"
+
+- name: Configure LeoFS Gateway
+  template: src=leo_gateway-config.j2 dest=/opt/local/leo_gateway/etc/leo_gateway.conf backup=yes
+  notify: Bounce LeoFS Gateway
+
+- name: Enable EPMD
+  service: name=epmd state=started enabled=yes
+
+- name: Enable LeoFS Gateway
+  service: name=leofs/gateway state=started enabled=yes
+  notify: Pause For Startup

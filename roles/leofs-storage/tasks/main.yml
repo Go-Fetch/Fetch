@@ -1,0 +1,23 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Lookup version of LeoFS Storage
+  shell: "pkgin list | grep leo_storage | awk '{print $1}'"
+  register: leofs_version_installed
+  changed_when: "leofs_version_installed.stdout != '{{ leofs_storage_version_required }}'"
+  ignore_errors: True
+
+- include: install.yml
+  when: "leofs_version_installed.stdout != '{{ leofs_storage_version_required }}'"
+
+- name: Configure LeoFS Storage
+  template: src=leo_storage-config.j2 dest=/opt/local/leo_storage/etc/leo_storage.conf backup=yes
+  notify: Bounce LeoFS Storage
+
+- name: Enable EPMD
+  service: name=epmd state=started enabled=yes
+
+- name: Enable LeoFS Storage
+  service: name=leofs/storage state=started enabled=yes
+  notify: Pause For Startup

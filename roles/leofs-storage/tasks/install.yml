@@ -1,0 +1,26 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Check for Project Fifo GPG Key
+  shell: "gpg --keyring /opt/local/etc/gnupg/pkgsrc.gpg --fingerprint | grep '{{ fifo_gpg_keyid }}'"
+  register: fifo_gpg_key
+  changed_when: fifo_gpg_key.rc != 0
+  ignore_errors: True
+
+- name: Install Project Fifo GPG Key
+  shell: "curl https://project-fifo.net/fifo.gpg | gpg --primary-keyring /opt/local/etc/gnupg/pkgsrc.gpg --import"
+  when: fifo_gpg_key.rc != 0
+
+- name: Package Directory Exist
+  file: path=/opt/local/packages/{{ leofs_release }} state=directory
+
+- name: Copy Package
+  copy: >
+    src="cache/{{ leofs_release }}/{{ leofs_storage_version_required }}.tgz"
+    dest="/opt/local/packages/{{ leofs_release }}/{{ leofs_storage_version_required }}.tgz"
+
+- name: Install/Upgrade LeoFS Storage
+  shell: "pkg_add -u /opt/local/packages/{{ leofs_release }}/{{ leofs_storage_version_required }}.tgz"
+  register: leofs_storage_install_result
+  changed_when: leofs_storage_install_result.stdout.find('already recorded as installed') != -1

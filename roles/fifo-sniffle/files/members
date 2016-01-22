@@ -1,0 +1,5 @@
+snifflenode=$(awk -F "=" '/nodename/ {print $2}' /opt/local/fifo-sniffle/etc/sniffle.conf | tr -d ' ')
+cookie=$(awk -F "=" '/distributed_cookie/ {print $2}' /opt/local/fifo-sniffle/etc/sniffle.conf | tr -d ' ')
+erl -name "shell-$snifflenode" -setcookie $cookie -noshell \
+-eval "net_adm:ping('$snifflenode'), {ok, RingData} = rpc:call('$snifflenode', riak_core_ring_manager, get_my_ring, []), Members = rpc:call('$snifflenode', riak_core_ring, all_members, [RingData]), io:format(\"~w~n\", [Members])." \
+-eval 'init:stop()' | tr "'" '"'

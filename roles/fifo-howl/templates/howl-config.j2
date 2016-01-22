@@ -1,0 +1,1154 @@
+## Number of acceptors processes to keep around for websocket connections.
+## 
+## Default: 100
+## 
+## Acceptable values:
+##   - an integer
+acceptors = 100
+
+## The port howl listens on for websockets
+## 
+## Default: 80
+## 
+## Acceptable values:
+##   - an integer
+http_port = 80
+
+## Enable or disable compression
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - on or off
+compression = on
+
+## Enable or disable SSL compression
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - one of: on, off, spdy
+ssl = on
+
+## The port howl listens to.
+## 
+## Default: 443
+## 
+## Acceptable values:
+##   - an integer
+ssl.port = 443
+
+## The TCP endpoint that will be broadcasted.
+## 
+## Default: 127.0.0.1:4240
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+ip = {{ ansible_default_ipv4['address'] }}:4240
+
+## The mDNS domain this installation is part of
+## 
+## Default: .local
+## 
+## Acceptable values:
+##   - text
+## domain = .local
+
+## The livetime of a broadcast, alsot he rebroadcast frequency
+## 
+## Default: 2m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## broadcast_interval = 2m
+
+## The default Service that is announced, ther eis very very
+## rarely any reason to change this.
+## 
+## Default: howl
+## 
+## Acceptable values:
+##   - text
+service = howl
+
+## The number of copies of the data that is keeped.
+## For good consistency N  < (R + W) should be true.
+## 
+## Default: 3
+## 
+## Acceptable values:
+##   - an integer
+## n = 3
+
+## The number of replies requried for a read request to succeed
+## The lower the value the faster the replies but the more likely stale
+## data is returend.
+## 
+## Default: 2
+## 
+## Acceptable values:
+##   - an integer
+## r = 2
+
+## The number of replies requried for a write request to succeed
+## The lower the value the faster the write but the more likely to only
+## write partial data.
+## 
+## Default: 3
+## 
+## Acceptable values:
+##   - an integer
+## w = 3
+
+## Schema directory
+## 
+## Default: ./share/schema
+## 
+## Acceptable values:
+##   - text
+schema_dir = ./share/schema
+
+## If the ui_path is specified the content of this path will
+## be served at the root directory.
+## 
+## Default: /opt/local/fifo-cerberus
+## 
+## Acceptable values:
+##   - the path to a directory
+ui_path = /opt/local/fifo-cerberus
+
+## The TCP IP that mdns messages arrive to.
+## 
+## Default: 127.0.0.1
+## 
+## Acceptable values:
+##   - text
+listening_ip = {{ ansible_default_ipv4['address'] }}
+
+## Wiggle allows caching of objects, please be aware
+## that caching data will increase the chacne of stale data.
+## However it can increase performance significantly. Different
+## objects have different 'lifetimes' so different timeouts
+## apply. Setting the timeout to 0 will disable caching.
+## However stale data served by wiggle does NOT mean stale data
+## within FiFo.
+## Wiggle will automatically invalidate the cache when a action is taken
+## that means when someone changes a setting it should be directy reflectd.
+## A two tier cache is used and works the following way:
+## * Items requested within the timeframe of the L1 TTL will be served
+## directly from the cache.
+## * Items requested within the timeframe of the L2 TTL are served
+## from the cache once but invalidated and the cache asyncrounously
+## updated.
+## * Itemsrequested after the L2 TTL are invalidated emediately and fetched
+## anew.
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - on or off
+caching = off
+
+## The time how long permissions for a token are cached,
+## this seriously improves quick successive requests.
+## 
+## Default: 1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.token.l1 = 1s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.token.l2 = 1m
+
+## Packages pretty much never change so a high TTL is possible.
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.package.l1 = 1m
+
+## 
+## Default: 10m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.package.l2 = 10m
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.package.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.package.l2 = 1m
+
+## Datasets pretty much never change so a high TTL is possible.
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.dataset.l1 = 1m
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.dataset.l2 = 1m
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.dataset.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.dataset.l2 = 1m
+
+## DTrace Scripts pretty much never change so a high TTL is possible.
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.dtrace.l1 = 1m
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.dtrace.l2 = 1m
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.dtrace.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.dtrace.l2 = 1m
+
+## Chunter updates services every 10s by default setting the TTL
+## to X means stale service state will be 10s+X (i.e. 20s)
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.hypervisor.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.hypervisor.l2 = 1m
+
+## 
+## Default: 1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.hypervisor.l1 = 1s
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.hypervisor.l2 = 10s
+
+## IPranges only change when a Ip was claimed some delay is accaptable here
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.iprange.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.iprange.l2 = 1m
+
+## 
+## Default: 1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.iprange.l1 = 1s
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.iprange.l2 = 10s
+
+## Networks barely ever change
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.network.l1 = 1m
+
+## 
+## Default: 10m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.network.l2 = 10m
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.network.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.network.l2 = 1m
+
+## Orgs barely ever change too
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.org.l1 = 1m
+
+## 
+## Default: 10m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.org.l2 = 10m
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.org.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.org.l2 = 1m
+
+## Roles barely ever change too
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.role.l1 = 1m
+
+## 
+## Default: 10m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.role.l2 = 10m
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.role.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.role.l2 = 1m
+
+## Users barely change either
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.user.l1 = 1m
+
+## 
+## Default: 10m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.user.l2 = 10m
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.user.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.user.l2 = 1m
+
+## VMs can change rather frequently so we don't cache them by default
+## 
+## Default: 0.1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.vm.l1 = 0.1s
+
+## 
+## Default: 5s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.vm.l2 = 5s
+
+## 
+## Default: 0.1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.vm.l1 = 0.1s
+
+## 
+## Default: 1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.vm.l2 = 1s
+
+## Groupings change sometimes so we can't have a long TTL
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.grouping.l1 = 10s
+
+## 
+## Default: 1m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.element.grouping.l2 = 1m
+
+## 
+## Default: 1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.grouping.l1 = 1s
+
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+ttl.list.grouping.l2 = 10s
+
+## Name of the Erlang node
+## 
+## Default: howl@127.0.0.1
+## 
+## Acceptable values:
+##   - text
+nodename = howl@{{ ansible_default_ipv4['address'] }}
+
+## Cookie for distributed node communication.  All nodes in the
+## same cluster should use the same cookie or they will not be able to
+## communicate.
+## 
+## Default: erlang
+## 
+## Acceptable values:
+##   - text
+distributed_cookie = {{ howl_cookie }}
+
+## Sets the number of threads in async thread pool, valid range
+## is 0-1024. If thread support is available, the default is 64.
+## More information at: http://erlang.org/doc/man/erl.html
+## 
+## Default: 64
+## 
+## Acceptable values:
+##   - an integer
+erlang.async_threads = 64
+
+## The number of concurrent ports/sockets
+## Valid range is 1024-134217727
+## 
+## Default: 65536
+## 
+## Acceptable values:
+##   - an integer
+erlang.max_ports = 65536
+
+## enable active anti-entropy subsystem
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - one of: on, off, debug
+anti_entropy = on
+
+## Restrict how fast AAE can build hash trees. Building the tree
+## for a given partition requires a full scan over that partition's
+## data. Once built, trees stay built until they are expired.
+## Config is of the form:
+## {num-builds, per-timespan}
+## Default is 1 build per hour.
+## 
+## Default: 1
+## 
+## Acceptable values:
+##   - an integer
+anti_entropy.build_limit.number = 1
+
+## 
+## Default: 1h
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+anti_entropy.build_limit.per_timespan = 1h
+
+## Determine how often hash trees are expired after being built.
+## Periodically expiring a hash tree ensures the on-disk hash tree
+## data stays consistent with the actual k/v backend data. It also
+## helps Riak identify silent disk failures and bit rot. However,
+## expiration is not needed for normal AAE operation and should be
+## infrequent for performance reasons. The time is specified in
+## milliseconds. The default is 1 week.
+## 
+## Default: 1w
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+anti_entropy.expire = 1w
+
+## Limit how many AAE exchanges/builds can happen concurrently.
+## 
+## Default: 2
+## 
+## Acceptable values:
+##   - an integer
+anti_entropy.concurrency = 2
+
+## The tick determines how often the AAE manager looks for work
+## to do (building/expiring trees, triggering exchanges, etc).
+## The default is every 15 seconds. Lowering this value will
+## speedup the rate that all replicas are synced across the cluster.
+## Increasing the value is not recommended.
+## 
+## Default: 15s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+anti_entropy.tick = 15s
+
+## The directory where AAE hash trees are stored.
+## 
+## Default: /var/db/howl/anti_entropy
+## 
+## Acceptable values:
+##   - text
+anti_entropy.data_dir = /var/db/howl/anti_entropy
+
+## This parameter defines the percentage, 1 to 100, of total
+## server memory to assign to leveldb.  leveldb will dynamically
+## adjust it internal cache sizs as Riak activates / inactivates
+## vnodes on this server to stay within this size.  The memory size
+## can alternately be assigned as a byte count via total_leveldb_mem instead.
+## 
+## Default: 80
+## 
+## Acceptable values:
+##   - an integer
+anti_entropy.total_leveldb_mem_percent = 80
+
+## Each database .sst table file can include an optional "bloom filter"
+## that is highly effective in shortcutting data queries that are destined
+## to not find the requested key. The bloom_filter typically increases the
+## size of an .sst table file by about 2%. This option must be set to true
+## in the riak.conf to take effect.
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - one of: on, off
+anti_entropy.bloomfilter = on
+
+## Default ring creation size.  Make sure it is a power of 2,
+## e.g. 16, 32, 64, 128, 256, 512 etc
+## This is set to a default of 4 to work in a one server installation
+## if you plan to expand your system please set it higher and reads
+## the manual at http://bit.ly/1ciKRkS
+## 
+## Default: 64
+## 
+## Acceptable values:
+##   - an integer
+## ring_size = 64
+
+## Number of concurrent node-to-node transfers allowed.
+## 
+## Default: 2
+## 
+## Acceptable values:
+##   - an integer
+## transfer_limit = 2
+
+## The SSL Server certificate
+## 
+## Default: /var/db/fifo/fifo.pem
+## 
+## Acceptable values:
+##   - text
+ssl.certfile = /var/db/fifo/fifo.pem
+
+## The SSL Key file
+## 
+## Default: /var/db/fifo/fifo.key
+## 
+## Acceptable values:
+##   - text
+ssl.keyfile = /var/db/fifo/fifo.key
+
+## The SSL CA certificate.
+## 
+## Default: /var/db/fifo/fifo.crt
+## 
+## Acceptable values:
+##   - text
+ssl.cacertfile = /var/db/fifo/fifo.crt
+
+## handoff.ip is the network address that Riak binds to for
+## intra-cluster data handoff.
+## 
+## Default: 127.0.0.1
+## 
+## Acceptable values:
+##   - text
+handoff.ip = {{ ansible_default_ipv4['address'] }}
+
+## DTrace support Do not enable 'dtrace' unless your Erlang/OTP
+## runtime is compiled to support DTrace.  DTrace is available in
+## R15B01 (supported by the Erlang/OTP official source package) and in
+## R14B04 via a custom source repository & branch.
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - on or off
+dtrace = off
+
+## Platform-specific installation paths (substituted by rebar)
+## 
+## Default: ./bin
+## 
+## Acceptable values:
+##   - the path to a directory
+platform_bin_dir = ./bin
+
+## The path data gets stored into.
+## 
+## Default: /var/db/howl
+## 
+## Acceptable values:
+##   - text
+platform_data_dir = /var/db/howl
+
+## 
+## Default: ./etc
+## 
+## Acceptable values:
+##   - the path to a directory
+platform_etc_dir = ./etc
+
+## 
+## Default: ./lib
+## 
+## Acceptable values:
+##   - the path to a directory
+platform_lib_dir = ./lib
+
+## 
+## Default: /var/log/howl
+## 
+## Acceptable values:
+##   - the path to a directory
+platform_log_dir = /var/log/howl
+
+## Enable consensus subsystem. Set to 'on' to enable the
+## consensus subsystem used for strongly consistent Riak operations.
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - on or off
+## strong_consistency = on
+
+## where do you want the console.log output:
+## off : nowhere
+## file: the file specified by log.console.file
+## console : standard out
+## both : log.console.file and standard out.
+## 
+## Default: howl
+## 
+## Acceptable values:
+##   - text
+log.service = howl
+
+## 
+## Default: file
+## 
+## Acceptable values:
+##   - one of: off, file, console, both
+log.console = file
+
+## the log level of the console log
+## 
+## Default: info
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.console.level = info
+
+## location of the console log
+## 
+## Default: /var/log/howl/console.log
+## 
+## Acceptable values:
+##   - text
+log.console.file = /var/log/howl/console.log
+
+## location of the error log
+## 
+## Default: /var/log/howl/error.log
+## 
+## Acceptable values:
+##   - text
+log.error.file = /var/log/howl/error.log
+
+## location of the debug log
+## 
+## Default: /var/log/howl/debug.log
+## 
+## Acceptable values:
+##   - text
+log.debug.file = /var/log/howl/debug.log
+
+## turn on syslog
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - one of: on, off
+log.syslog = off
+
+## the log level of the watchdog log
+## 
+## Default: error
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.watchdog.level = error
+
+## the log level of the watchdog log
+## 
+## Default: fifo
+## 
+## Acceptable values:
+##   - text
+log.watchdog.cluster = fifo
+
+## The ip of the watchdog server
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+## log.watchdog.host.name = 127.0.0.1:4444
+
+## The ip of the graylog server
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+##   - the text "off"
+## log.graylog.host = 127.0.0.1:12201
+
+## the log level of the graylog log
+## 
+## Default: info
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.graylog.level = info
+
+## The ip of the graylog server
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+##   - the text "off"
+## log.logstash.host = 127.0.0.1:9125
+
+## the log level of the graylog log
+## 
+## Default: info
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.logstash.level = info
+
+## Whether to write a crash log, and where.
+## Commented/omitted/undefined means no crash logger.
+## 
+## Default: /var/log/howl/crash.log
+## 
+## Acceptable values:
+##   - text
+log.crash.file = /var/log/howl/crash.log
+
+## Maximum size in bytes of events in the crash log - defaults to 65536
+## 
+## Default: 64KB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+log.crash.msg_size = 64KB
+
+## Maximum size of the crash log in bytes, before its rotated, set
+## to 0 to disable rotation - default is 0
+## 
+## Default: 10MB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+log.crash.size = 10MB
+
+## What time to rotate the crash log - default is no time
+## rotation. See the lager README for a description of this format:
+## https://github.com/basho/lager/blob/master/README.org
+## 
+## Default: $D0
+## 
+## Acceptable values:
+##   - text
+log.crash.date = $D0
+
+## Number of rotated crash logs to keep, 0 means keep only the
+## current one - default is 0
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+log.crash.count = 5
+
+## Whether to redirect error_logger messages into lager - defaults to true
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - one of: on, off
+log.error.redirect = on
+
+## maximum number of error_logger messages to handle in a second
+## lager 2.0.0 shipped with a limit of 50, which is a little low for riak's startup
+## 
+## Default: 100
+## 
+## Acceptable values:
+##   - an integer
+log.error.messages_per_second = 100
+
+## The default realm to use for snarl calls.
+## 
+## Default: default
+## 
+## Acceptable values:
+##   - text
+libsnarl.realm = default
+
+## Fetcher configurations
+## 
+## Default: 10
+## 
+## Acceptable values:
+##   - an integer
+upload.pool_size = 10
+
+## 
+## Default: 15
+## 
+## Acceptable values:
+##   - an integer
+upload.pool_max = 15
+
+## 
+## Default: 3
+## 
+## Acceptable values:
+##   - an integer
+upload.retry = 3
+
+## 
+## Default: 10
+## 
+## Acceptable values:
+##   - an integer
+download.pool_size = 10
+
+## 
+## Default: 15
+## 
+## Acceptable values:
+##   - an integer
+download.pool_max = 15
+
+## 
+## Default: 10
+## 
+## Acceptable values:
+##   - an integer
+download.preload_chunks = 10
+
+## 
+## Default: 3
+## 
+## Acceptable values:
+##   - an integer
+download.retry = 3
+
+## The TCP endpoint for the backend server.
+## 
+## Default: 127.0.0.1:5555
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+backend_server = 127.0.0.1:5555
+
+## Initial number of conneciton pool workers
+## 
+## Default: 20
+## 
+## Acceptable values:
+##   - an integer
+pool.size = 20
+
+## Maximum number of conneciton pool workers
+## 
+## Default: 50
+## 
+## Acceptable values:
+##   - an integer
+pool.max = 50
+
+## The chunk size used to read from the backend.
+## 
+## Default: 100000
+## 
+## Acceptable values:
+##   - an integer
+chunk = 100000
+
+## Maximum length for a single query
+## 
+## Default: 1209600
+## 
+## Acceptable values:
+##   - an integer
+max_read = 1209600
+
+## The DalmatinerDB backend ip and port.
+## 
+## Default: 127.0.0.1:4444
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+## folsom_ddb.ip = 127.0.0.1:5555
+
+## The bucket to store folsom data in.
+## 
+## Default: fifo
+## 
+## Acceptable values:
+##   - text
+folsom_ddb.bucket = fifo
+
+## The prefix that is added to each metric, in total the metric
+## will be contructed [<PREFIX> | <Metric Path>]
+## 
+## Default: howl
+## 
+## Acceptable values:
+##   - text
+folsom_ddb.prefix = howl
+
+## The approximitely send buffer size, please keep in mind that it is
+## not a hard limit so select it a decent bit over the receive buffer of
+## DalmatinerDB.
+## Especially with histograms the buffer size can be overstepped sicne it is
+## checked only after each metric.
+## 
+## Default: 4KB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+## folsom_ddb.buffer_size = 4KB
+
+## The interval in which folsom data is checked, default is 1 Second.
+## 
+## Default: 1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+folsom_ddb.interval = 1s
+
+## Enables or disables metrics for the Erlang VM.
+## 
+## Default: false
+## 
+## Acceptable values:
+##   - true or false
+folsom_ddb.vm_metrics = false
+
+## The place the SNMP agent looks for it's configuration.
+## 
+## Default: snmp/conf/
+## 
+## Acceptable values:
+##   - text
+snmp.config_dir = snmp/conf/
+
+## This is where the SNMP related databases and data gets
+## stored, it must be writable for the process.
+## 
+## Default: /var/db/howl
+## 
+## Acceptable values:
+##   - text
+snmp.data_dir = /var/db/howl
+
+## Domain this listener is listening to.
+## 
+## Default: .local
+## 
+## Acceptable values:
+##   - text
+mdns.client.domain = .local
+
+## The IP of the interface mdns traffic is received.
+## a ip of 0.0.0.0 means the first found interface. The default is 5453
+## 
+## Default: 0.0.0.0
+## 
+## Acceptable values:
+##   - text
+mdns.client.interface = 0.0.0.0
+
+## The multicast group the MDNS service is running on.
+## 
+## Default: 224.0.0.251:5353
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+mdns.client.multicast_group = 224.0.0.251:5353
+
+## the time that the mdns client iwll wait for a reply from a counterpart
+## before it claims a timeout.
+## 
+## Default: 1s500ms
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+mdns.client.timeout = 1s500ms
+
+## Number of tiems a given request will try to find a responding host
+## before it gives up.
+## 
+## Default: 4
+## 
+## Acceptable values:
+##   - an integer
+mdns.client.retries = 4
+
+## Deley between retries to ensure minimal hickups don't blow up the
+## system.
+## 
+## Default: 150ms
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+mdns.client.retrie_delay = 150ms
+
+## Number of downvotes a endpoint needs to be taken offline for this round.
+## before it gives up.
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+mdns.client.max_downvotes = 5
+
+## Initial/idle size of a connection pool.
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+mdns.client.pool.initial = 5
+
+## Maximum size of the connector pools, ther is one pool per endpoint per
+## service.
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+mdns.client.pool.max = 5
+
+{% if 'no_howl_mdns' in group_names %}
+mdns.server = disabled
+{% endif %}

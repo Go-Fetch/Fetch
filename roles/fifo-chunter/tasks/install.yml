@@ -1,0 +1,11 @@
+---
+
+- name: download latest chunter
+  shell: curl http://release.project-fifo.net/gz/{{chunter_release}}/{{chunter_download_name}} -o /opt/chunter-latest.gz
+
+- name: unpack chunter
+  shell: gunzip -f /opt/chunter-latest.gz
+
+- name: install chunter
+  shell: sh /opt/chunter-latest -f
+  notify: Bounce Chunter

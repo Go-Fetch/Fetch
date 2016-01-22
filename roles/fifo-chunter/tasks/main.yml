@@ -1,0 +1,27 @@
+---
+
+- name: Gather our facts
+  action: setup
+
+- name: Lookup version of chunter
+  shell: awk {'gsub(",",""); print $1'} /opt/chunter/etc/chunter.version
+  register: chunter_version_installed
+  changed_when: chunter_version_installed.stdout != '{{chunter_version_required}}'
+  ignore_errors: True
+
+# If verions matches
+# update cookie, bouce service
+# else run install script
+
+- include: install.yml
+  when: chunter_version_installed.stdout != '{{chunter_version_required}}'
+
+- name: configure chunter
+  template: src=chunter-config.j2 dest=/opt/chunter/etc/chunter.conf
+  notify: Bounce Chunter
+
+- name: Enable epmd
+  service: name=epmd state=started enabled=yes
+
+- name: Enable Chunter
+  service: name=chunter state=started enabled=yes

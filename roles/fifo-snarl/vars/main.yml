@@ -1,0 +1,8 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+snarl_release: rel
+snarl_version_required: fifo-snarl-0.7.1p1
+snarl_cookie: <<snarl_cookie>>
+fifo_gpg_keyid: BB975564

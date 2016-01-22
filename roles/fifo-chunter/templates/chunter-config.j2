@@ -1,0 +1,493 @@
+## Enables or disables the zone snapshot API
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - on or off
+snapshot_api = on
+
+## Enables or disables the zone backup API
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - on or off
+backup_api = on
+
+## Enables or disables the zone metadata API
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - on or off
+metadata_api = on
+
+## Enables or disables the zone grouping
+## (stacks and clusters) metadata API
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - on or off
+grouping_api = on
+
+## Memory reserved on the hypervisor.
+## 
+## Default: 0MB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+reserved_memory = 0MB
+
+## Size of the chunks for uploading to the s3 storage.
+## 
+## Default: 5MB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+s3_upload_chunk_size = 5MB
+
+## Initial number of paralel uploads to s3.
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+parallel_uploads = 5
+
+## Maximal number of paralel uploads to s3.
+## 
+## Default: 10
+## 
+## Acceptable values:
+##   - an integer
+max_parallel_uploads = 10
+
+## Number of chunks to prefreth.
+## 
+## Default: 2
+## 
+## Acceptable values:
+##   - an integer
+preload = 2
+
+## Size of the chunks for downloading fomr the s3 storage.
+## 
+## Default: 5MB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+s3_download_chunk_size = 5MB
+
+## Initial number of paralel downloads from s3.
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+parallel_downloads = 5
+
+## Maximal number of paralel downloads from s3.
+## 
+## Default: 10
+## 
+## Acceptable values:
+##   - an integer
+max_parallel_downloads = 10
+
+## Enables or disables the ARC stats for this server.
+## 
+## Default: enabled
+## 
+## Acceptable values:
+##   - enabled or disabled
+kstat.arc = enabled
+
+## The interval services for a zone are checked, the default is 10s
+## changes are noted even when the state is the same at least for the nsq
+## logging.
+## 
+## Default: 10s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+update_services_interval = 10s
+
+## The interval the ZFS snapshots are checked this should not be too fast
+## since it will increase load. The default is every 15 minutes. This also does
+## not change too often so increasing it does not make too much sense.
+## 
+## Default: 15m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+snapshot_update_interval = 15m
+
+## The interval the zones are checked for their state, this means running
+## `zoneadm list -ip` on the node. This is only required if a change is missed
+## due to some hickup but it ensures that the state of zones is always up to
+## date.
+## Generally the more often this happen the less are the chances a state is
+## misrepresented but the higher is the load on the system.
+## This operation is fairly inexpensive.
+## 
+## Default: 1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+zonemon_interval = 1s
+
+## The interval in which the zpool is checked for degrated disks. This
+## is a more expensive opperation so should be executed not too frequently,
+## generaly a interval of 15s means that worst case a degraded pool stays
+## undetected for 15s.
+## 
+## Default: 15s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+zpool_interval = 15s
+
+## The interval in which the systems ARC status is checked, this is
+## purely informational and slowly changing a higher interval is usually
+## not a issue.
+## 
+## Default: 30s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+arc_interval = 30s
+
+## The port And IP chunter does listen on, usually it will be
+## auto detected as the first network iterface in the system, if it still
+## needs to be changed it can be done here.
+## 
+## Default: 127.0.0.1:4200
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+ip = {{ ansible_default_ipv4['address'] }}:4200
+
+## cpu_type used for creating VM's. This only applies to KVM machines,
+## 'default' will not set the option at all. Please see 'man vmadm' for details.
+## 
+## Default: default
+## 
+## Acceptable values:
+##   - one of: default, qemu64, host
+cpu_type = default
+
+## zone root for creating new zones
+## 
+## Default: /zones
+## 
+## Acceptable values:
+##   - text
+zone_root = /zones
+
+## network mappings only apply for OmniOS hosts, they are handled in the
+## /usbkey/config in SmartOS and this setting iwll be ignored there.
+## 
+## Acceptable values:
+##   - text
+## network_tag.name = bge0
+
+## The default realm to use for snarl calls.
+## 
+## Default: default
+## 
+## Acceptable values:
+##   - text
+libsnarl.realm = default
+
+## Domain this listener is listening to.
+## 
+## Default: .local
+## 
+## Acceptable values:
+##   - text
+mdns.client.domain = .local
+
+## The IP of the interface mdns traffic is received.
+## a ip of 0.0.0.0 means the first found interface. The default is 5453
+## 
+## Default: 0.0.0.0
+## 
+## Acceptable values:
+##   - text
+mdns.client.interface = 0.0.0.0
+
+## The multicast group the MDNS service is running on.
+## 
+## Default: 224.0.0.251:5353
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+mdns.client.multicast_group = 224.0.0.251:5353
+
+## the time that the mdns client iwll wait for a reply from a counterpart
+## before it claims a timeout.
+## 
+## Default: 1s500ms
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+mdns.client.timeout = 1s500ms
+
+## Number of tiems a given request will try to find a responding host
+## before it gives up.
+## 
+## Default: 4
+## 
+## Acceptable values:
+##   - an integer
+mdns.client.retries = 4
+
+## Deley between retries to ensure minimal hickups don't blow up the
+## system.
+## 
+## Default: 150ms
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+mdns.client.retrie_delay = 150ms
+
+## Number of downvotes a endpoint needs to be taken offline for this round.
+## before it gives up.
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+mdns.client.max_downvotes = 5
+
+## Initial/idle size of a connection pool.
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+mdns.client.pool.initial = 5
+
+## Maximum size of the connector pools, ther is one pool per endpoint per
+## service.
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+mdns.client.pool.max = 5
+
+## Name of the Erlang node
+## 
+## Default: chunter@127.0.0.1
+## 
+## Acceptable values:
+##   - text
+nodename = chunter@{{ ansible_default_ipv4['address'] }}
+
+## Cookie for distributed node communication.  All nodes in the
+## same cluster should use the same cookie or they will not be able to
+## communicate.
+## 
+## Default: erlang
+## 
+## Acceptable values:
+##   - text
+distributed_cookie = {{ chunter_cookie }}
+
+## Sets the number of threads in async thread pool, valid range
+## is 0-1024. If thread support is available, the default is 64.
+## More information at: http://erlang.org/doc/man/erl.html
+## 
+## Default: 64
+## 
+## Acceptable values:
+##   - an integer
+erlang.async_threads = 64
+
+## The number of concurrent ports/sockets
+## Valid range is 1024-134217727
+## 
+## Default: 65536
+## 
+## Acceptable values:
+##   - an integer
+erlang.max_ports = 65536
+
+## where do you want the console.log output:
+## off : nowhere
+## file: the file specified by log.console.file
+## console : standard out
+## both : log.console.file and standard out.
+## 
+## Default: chunter
+## 
+## Acceptable values:
+##   - text
+log.service = chunter
+
+## 
+## Default: file
+## 
+## Acceptable values:
+##   - one of: off, file, console, both
+log.console = file
+
+## the log level of the console log
+## 
+## Default: info
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.console.level = info
+
+## location of the console log
+## 
+## Default: /var/log/chunter/console.log
+## 
+## Acceptable values:
+##   - text
+log.console.file = /var/log/chunter/console.log
+
+## location of the error log
+## 
+## Default: /var/log/chunter/error.log
+## 
+## Acceptable values:
+##   - text
+log.error.file = /var/log/chunter/error.log
+
+## location of the debug log
+## 
+## Default: /var/log/chunter/debug.log
+## 
+## Acceptable values:
+##   - text
+log.debug.file = /var/log/chunter/debug.log
+
+## turn on syslog
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - one of: on, off
+log.syslog = off
+
+## the log level of the watchdog log
+## 
+## Default: error
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.watchdog.level = error
+
+## the log level of the watchdog log
+## 
+## Default: fifo
+## 
+## Acceptable values:
+##   - text
+log.watchdog.cluster = fifo
+
+## The ip of the watchdog server
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+## log.watchdog.host.name = 127.0.0.1:4444
+
+## The ip of the graylog server
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+##   - the text "off"
+## log.graylog.host = 127.0.0.1:12201
+
+## the log level of the graylog log
+## 
+## Default: info
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.graylog.level = info
+
+## The ip of the graylog server
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+##   - the text "off"
+## log.logstash.host = 127.0.0.1:9125
+
+## the log level of the graylog log
+## 
+## Default: info
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.logstash.level = info
+
+## Whether to write a crash log, and where.
+## Commented/omitted/undefined means no crash logger.
+## 
+## Default: /var/log/chunter/crash.log
+## 
+## Acceptable values:
+##   - text
+log.crash.file = /var/log/chunter/crash.log
+
+## Maximum size in bytes of events in the crash log - defaults to 65536
+## 
+## Default: 64KB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+log.crash.msg_size = 64KB
+
+## Maximum size of the crash log in bytes, before its rotated, set
+## to 0 to disable rotation - default is 0
+## 
+## Default: 10MB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+log.crash.size = 10MB
+
+## What time to rotate the crash log - default is no time
+## rotation. See the lager README for a description of this format:
+## https://github.com/basho/lager/blob/master/README.org
+## 
+## Default: $D0
+## 
+## Acceptable values:
+##   - text
+log.crash.date = $D0
+
+## Number of rotated crash logs to keep, 0 means keep only the
+## current one - default is 0
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+log.crash.count = 5
+
+## Whether to redirect error_logger messages into lager - defaults to true
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - one of: on, off
+log.error.redirect = on
+
+## maximum number of error_logger messages to handle in a second
+## lager 2.0.0 shipped with a limit of 50, which is a little low for riak's startup
+## 
+## Default: 100
+## 
+## Acceptable values:
+##   - an integer
+log.error.messages_per_second = 100

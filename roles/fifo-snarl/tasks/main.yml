@@ -1,0 +1,29 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Lookup version of Snarl
+  shell: "pkgin list | grep fifo-snarl | awk -F'[;]' '{print $1}'"
+  register: snarl_version_installed
+  changed_when: "snarl_version_installed.stdout != '{{ snarl_version_required }}'"
+  ignore_errors: True
+
+- include: install.yml
+  when: "snarl_version_installed.stdout != '{{ snarl_version_required }}'"
+
+- name: Configure Snarl
+  template: src=snarl-config.j2 dest=/opt/local/fifo-snarl/etc/snarl.conf backup=yes
+  notify: Bounce Snarl
+
+- name: Enable EPMD
+  service: name=epmd state=started enabled=yes
+  when: "'snarl_no_start' not in {{ group_names }}"
+
+- name: Enable Snarl
+  service: name=snarl state=started enabled=yes
+  when: "'snarl_no_start' not in group_names"
+  register: snarl_service_start
+
+- name: Pause for Snarl Startup
+  pause: seconds=20
+  when: snarl_service_start.changed != False

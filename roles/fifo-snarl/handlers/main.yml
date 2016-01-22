@@ -1,0 +1,7 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Bounce Snarl
+  service: name=snarl state=restarted enabled=yes
+  when: "'snarl_no_start' not in {{ group_names }}"

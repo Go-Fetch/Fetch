@@ -1,0 +1,727 @@
+## This section deals with Yubikey support a API key and
+## client ID can be obtained from:
+## https://upgrade.yubico.com/getapikey/
+## 
+## Acceptable values:
+##   - text
+## yubico.client_id = 123
+
+## The Secret key related that was issued along with
+## the Yubico cleint ID.
+## 
+## Acceptable values:
+##   - text
+## yubico.secret_key = ...
+
+## Datacenter Syncronisation settings, please keep in mind
+## that for event replication only events from this server
+## will be replicated, to replicate events from other servers
+## syncronisation needs to be set up there as well.
+## It is not required to have a 1:1 mapping but it is the most
+## sensible way.
+## It is also important to node that sync should be set up from
+## both sides to get best results.
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - one of: on, off, debug
+sync = off
+
+## The IP/Port this server will listen to for incoming sync
+## connections.
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+## sync.ip = 127.0.0.1:4201
+
+## Specification of a sync partner, there should be one or
+## more per remote datacenter.
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+## sync.partner.name = 10.20.30.40:4201
+
+## Snarl usually uses bcrypt to hash passwords to increase security
+## for some systems so this is too slow so it is possible to revert back
+## to bcrypt.
+## 
+## Default: bcrypt
+## 
+## Acceptable values:
+##   - one of: bcrypt, sha512
+hash_fun = bcrypt
+
+## The full syncronisation will dynamically update it's data
+## whenever a change is made to a object local to this node
+## in addition to that this interval determines how often
+## a full rebuild should take place.
+## 
+## Default: 1h
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## sync.build_interval = 1h
+
+## During a full rebuild reads from the Snarl system are
+## delayed to prevent slowing down the database during the rebuild
+## this value specifies the delay between reads.
+## 
+## Default: 50ms
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## sync.read_delay = 50ms
+
+## This defines how often it should be checked if differences
+## exists betwen local and remote nodes. Please keep in mind that
+## sync should be set up in both directions this syncs will be
+## performed about twice as often as specified here.
+## 
+## Default: 15m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## sync.interval = 15m
+
+## If a command is send to a sync partner and this trheashold
+## is excided the connection will attempt to bounc and be reistablished.
+## 
+## Default: 1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## sync.recv_timeout = 1s
+
+## The TCP endpoint that will be broadcasted.
+## 
+## Default: 127.0.0.1:4200
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+ip = {{ ansible_default_ipv4['address'] }}:4200
+
+## The mDNS domain this installation is part of
+## 
+## Default: .local
+## 
+## Acceptable values:
+##   - text
+## domain = .local
+
+## The livetime of a broadcast, alsot he rebroadcast frequency
+## 
+## Default: 2m
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## broadcast_interval = 2m
+
+## The default Service that is announced, ther eis very very
+## rarely any reason to change this.
+## 
+## Default: snarl
+## 
+## Acceptable values:
+##   - text
+service = snarl
+
+## The number of copies of the data that is keeped.
+## For good consistency N  < (R + W) should be true.
+## 
+## Default: 3
+## 
+## Acceptable values:
+##   - an integer
+## n = 3
+
+## The number of replies requried for a read request to succeed
+## The lower the value the faster the replies but the more likely stale
+## data is returend.
+## 
+## Default: 2
+## 
+## Acceptable values:
+##   - an integer
+## r = 2
+
+## The number of replies requried for a write request to succeed
+## The lower the value the faster the write but the more likely to only
+## write partial data.
+## 
+## Default: 3
+## 
+## Acceptable values:
+##   - an integer
+## w = 3
+## Schema directory
+
+## 
+## Default: ./share/schema
+## 
+## Acceptable values:
+##   - text
+schema_dir = ./share/schema
+
+## 
+## Default: 1h
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+oauth2.expiry_time = 1h
+
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## oauth2.password_credentials.expiry_time = 2h
+
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## oauth2.client_credentials.expiry_time = 1d
+
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## oauth2.refresh_token.expiry_time = 30d
+
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+## oauth2.code_grant.expiry_time = 10m
+
+## Name of the Erlang node
+## 
+## Default: snarl@127.0.0.1
+## 
+## Acceptable values:
+##   - text
+nodename = snarl@{{ ansible_default_ipv4['address'] }}
+
+## Cookie for distributed node communication.  All nodes in the
+## same cluster should use the same cookie or they will not be able to
+## communicate.
+## 
+## Default: erlang
+## 
+## Acceptable values:
+##   - text
+distributed_cookie = {{ snarl_cookie }}
+
+## Sets the number of threads in async thread pool, valid range
+## is 0-1024. If thread support is available, the default is 64.
+## More information at: http://erlang.org/doc/man/erl.html
+## 
+## Default: 64
+## 
+## Acceptable values:
+##   - an integer
+erlang.async_threads = 64
+
+## The number of concurrent ports/sockets
+## Valid range is 1024-134217727
+## 
+## Default: 65536
+## 
+## Acceptable values:
+##   - an integer
+erlang.max_ports = 65536
+
+## enable active anti-entropy subsystem
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - one of: on, off, debug
+anti_entropy = off
+
+## Restrict how fast AAE can build hash trees. Building the tree
+## for a given partition requires a full scan over that partition's
+## data. Once built, trees stay built until they are expired.
+## Config is of the form:
+## {num-builds, per-timespan}
+## Default is 1 build per hour.
+## 
+## Default: 1
+## 
+## Acceptable values:
+##   - an integer
+anti_entropy.build_limit.number = 1
+
+## 
+## Default: 1h
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+anti_entropy.build_limit.per_timespan = 1h
+
+## Determine how often hash trees are expired after being built.
+## Periodically expiring a hash tree ensures the on-disk hash tree
+## data stays consistent with the actual k/v backend data. It also
+## helps Riak identify silent disk failures and bit rot. However,
+## expiration is not needed for normal AAE operation and should be
+## infrequent for performance reasons. The time is specified in
+## milliseconds. The default is 1 week.
+## 
+## Default: 1w
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+anti_entropy.expire = 1w
+
+## Limit how many AAE exchanges/builds can happen concurrently.
+## 
+## Default: 2
+## 
+## Acceptable values:
+##   - an integer
+anti_entropy.concurrency = 2
+
+## The tick determines how often the AAE manager looks for work
+## to do (building/expiring trees, triggering exchanges, etc).
+## The default is every 15 seconds. Lowering this value will
+## speedup the rate that all replicas are synced across the cluster.
+## Increasing the value is not recommended.
+## 
+## Default: 15s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+anti_entropy.tick = 15s
+
+## The directory where AAE hash trees are stored.
+## 
+## Default: /var/db/snarl/anti_entropy
+## 
+## Acceptable values:
+##   - text
+anti_entropy.data_dir = /var/db/snarl/anti_entropy
+
+## This parameter defines the percentage, 1 to 100, of total
+## server memory to assign to leveldb.  leveldb will dynamically
+## adjust it internal cache sizs as Riak activates / inactivates
+## vnodes on this server to stay within this size.  The memory size
+## can alternately be assigned as a byte count via total_leveldb_mem instead.
+## 
+## Default: 80
+## 
+## Acceptable values:
+##   - an integer
+anti_entropy.total_leveldb_mem_percent = 80
+
+## Each database .sst table file can include an optional "bloom filter"
+## that is highly effective in shortcutting data queries that are destined
+## to not find the requested key. The bloom_filter typically increases the
+## size of an .sst table file by about 2%. This option must be set to true
+## in the riak.conf to take effect.
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - one of: on, off
+anti_entropy.bloomfilter = on
+
+## Default ring creation size.  Make sure it is a power of 2,
+## e.g. 16, 32, 64, 128, 256, 512 etc
+## This is set to a default of 4 to work in a one server installation
+## if you plan to expand your system please set it higher and reads
+## the manual at http://bit.ly/1ciKRkS
+## 
+## Default: 64
+## 
+## Acceptable values:
+##   - an integer
+## ring_size = 64
+
+## Number of concurrent node-to-node transfers allowed.
+## 
+## Default: 2
+## 
+## Acceptable values:
+##   - an integer
+## transfer_limit = 2
+
+## Default cert location for https can be overridden
+## with the ssl config variable, for example:
+## 
+## Acceptable values:
+##   - the path to a file
+## ssl.certfile = $(platform_etc_dir)/cert.pem
+
+## Default key location for https can be overridden with the ssl
+## config variable, for example:
+## 
+## Acceptable values:
+##   - the path to a file
+## ssl.keyfile = $(platform_etc_dir)/key.pem
+
+## Default signing authority location for https can be overridden
+## with the ssl config variable, for example:
+## 
+## Acceptable values:
+##   - the path to a file
+## ssl.cacertfile = $(platform_etc_dir)/cacertfile.pem
+
+## handoff.ip is the network address that Riak binds to for
+## intra-cluster data handoff.
+## 
+## Default: 127.0.0.1
+## 
+## Acceptable values:
+##   - text
+handoff.ip = 127.0.0.1
+
+## DTrace support
+## Do not enable 'dtrace' unless your Erlang/OTP
+## runtime is compiled to support DTrace.  DTrace is
+## available in R15B01 (supported by the Erlang/OTP
+## official source package) and in R14B04 via a custom
+## source repository & branch.
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - one of: on, off
+dtrace = on
+
+## Platform-specific installation paths (substituted by rebar)
+## 
+## Default: ./bin
+## 
+## Acceptable values:
+##   - the path to a directory
+platform_bin_dir = ./bin
+
+## The path data gets stored into.
+## 
+## Default: /var/db/snarl
+## 
+## Acceptable values:
+##   - text
+platform_data_dir = /var/db/snarl
+
+## 
+## Default: ./etc
+## 
+## Acceptable values:
+##   - the path to a directory
+platform_etc_dir = ./etc
+
+## 
+## Default: ./lib
+## 
+## Acceptable values:
+##   - the path to a directory
+platform_lib_dir = ./lib
+
+## 
+## Default: /var/log/snarl
+## 
+## Acceptable values:
+##   - the path to a directory
+platform_log_dir = /var/log/snarl
+
+## Enable consensus subsystem. Set to 'on' to enable the
+## consensus subsystem used for strongly consistent Riak operations.
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - on or off
+## strong_consistency = on
+
+## where do you want the console.log output:
+## off : nowhere
+## file: the file specified by log.console.file
+## console : standard out
+## both : log.console.file and standard out.
+## 
+## Default: snarl
+## 
+## Acceptable values:
+##   - text
+log.service = snarl
+
+## 
+## Default: file
+## 
+## Acceptable values:
+##   - one of: off, file, console, both
+log.console = file
+
+## the log level of the console log
+## 
+## Default: info
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.console.level = info
+
+## location of the console log
+## 
+## Default: /var/log/snarl/console.log
+## 
+## Acceptable values:
+##   - text
+log.console.file = /var/log/snarl/console.log
+
+## location of the error log
+## 
+## Default: /var/log/snarl/error.log
+## 
+## Acceptable values:
+##   - text
+log.error.file = /var/log/snarl/error.log
+
+## location of the debug log
+## 
+## Default: /var/log/snarl/debug.log
+## 
+## Acceptable values:
+##   - text
+log.debug.file = /var/log/snarl/debug.log
+
+## turn on syslog
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - one of: on, off
+log.syslog = off
+
+## the log level of the watchdog log
+## 
+## Default: error
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.watchdog.level = error
+
+## the log level of the watchdog log
+## 
+## Default: fifo
+## 
+## Acceptable values:
+##   - text
+log.watchdog.cluster = fifo
+
+## The ip of the watchdog server
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+## log.watchdog.host.name = 127.0.0.1:4444
+
+## The ip of the graylog server
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+##   - the text "off"
+## log.graylog.host = 127.0.0.1:12201
+
+## the log level of the graylog log
+## 
+## Default: info
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.graylog.level = info
+
+## The ip of the graylog server
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+##   - the text "off"
+## log.logstash.host = 127.0.0.1:9125
+
+## the log level of the graylog log
+## 
+## Default: info
+## 
+## Acceptable values:
+##   - one of: debug, info, warning, error
+log.logstash.level = info
+
+## Whether to write a crash log, and where.
+## Commented/omitted/undefined means no crash logger.
+## 
+## Default: /var/log/snarl/crash.log
+## 
+## Acceptable values:
+##   - text
+log.crash.file = /var/log/snarl/crash.log
+
+## Maximum size in bytes of events in the crash log - defaults to 65536
+## 
+## Default: 64KB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+log.crash.msg_size = 64KB
+
+## Maximum size of the crash log in bytes, before its rotated, set
+## to 0 to disable rotation - default is 0
+## 
+## Default: 10MB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+log.crash.size = 10MB
+
+## What time to rotate the crash log - default is no time
+## rotation. See the lager README for a description of this format:
+## https://github.com/basho/lager/blob/master/README.org
+## 
+## Default: $D0
+## 
+## Acceptable values:
+##   - text
+log.crash.date = $D0
+
+## Number of rotated crash logs to keep, 0 means keep only the
+## current one - default is 0
+## 
+## Default: 5
+## 
+## Acceptable values:
+##   - an integer
+log.crash.count = 5
+
+## Whether to redirect error_logger messages into lager - defaults to true
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - one of: on, off
+log.error.redirect = on
+
+## maximum number of error_logger messages to handle in a second
+## lager 2.0.0 shipped with a limit of 50, which is a little low for riak's startup
+## 
+## Default: 100
+## 
+## Acceptable values:
+##   - an integer
+log.error.messages_per_second = 100
+
+## Default database destination
+## 
+## Default: /var/db/snarl
+## 
+## Acceptable values:
+##   - text
+db.dir = /var/db/snarl
+
+## leveldb data_root
+## 
+## Default: /var/db/snarl/leveldb
+## 
+## Acceptable values:
+##   - text
+leveldb.data_root = /var/db/snarl/leveldb
+
+## This parameter defines the percentage, 1 to 100, of total
+## server memory to assign to leveldb.  leveldb will dynamically
+## adjust it internal cache sizs as Riak activates / inactivates
+## vnodes on this server to stay within this size.  The memory size
+## can alternately be assigned as a byte count via total_leveldb_mem instead.
+## 
+## Default: 80
+## 
+## Acceptable values:
+##   - an integer
+leveldb.total_leveldb_mem_percent = 80
+
+## the Size of the mmaped chunkes, this should be tuned according to
+## the number of open files and total memory present.
+## Default is 1MB to allow for a bigger number of small files, please tune
+## accordingly in bigger installations.
+## 
+## Default: 1MB
+## 
+## Acceptable values:
+##   - a byte size with units, e.g. 10GB
+leveldb.mmap_size = 1MB
+
+## Each database .sst table file can include an optional "bloom filter"
+## that is highly effective in shortcutting data queries that are destined
+## to not find the requested key. The bloom_filter typically increases the
+## size of an .sst table file by about 2%. This option must be set to true
+## in the riak.conf to take effect.
+## 
+## Default: on
+## 
+## Acceptable values:
+##   - one of: on, off
+leveldb.bloomfilter = on
+
+## En or disables compression for the leveldb database.
+## 
+## Default: off
+## 
+## Acceptable values:
+##   - one of: on, off
+leveldb.compression = off
+
+## The DalmatinerDB backend ip and port.
+## 
+## Acceptable values:
+##   - an IP/port pair, e.g. 127.0.0.1:10011
+## folsom_ddb.ip = 127.0.0.1:5555
+
+## The bucket to store folsom data in.
+## 
+## Default: fifo
+## 
+## Acceptable values:
+##   - text
+folsom_ddb.bucket = fifo
+
+## The prefix that is added to each metric, in total the metric
+## will be contructed [<PREFIX> | <Metric Path>]
+## 
+## Default: snarl@127.0.0.1
+## 
+## Acceptable values:
+##   - text
+folsom_ddb.prefix = snarl@127.0.0.1
+
+## The interval in which folsom data is checked, default is 1 Second.
+## 
+## Default: 1s
+## 
+## Acceptable values:
+##   - a time duration with units, e.g. '10s' for 10 seconds
+folsom_ddb.interval = 1s
+
+## Enables or disables metrics for the Erlang VM.
+## 
+## Default: false
+## 
+## Acceptable values:
+##   - true or false
+folsom_ddb.vm_metrics = false
+
+## The place the SNMP agent looks for it's configuration.
+## 
+## Default: snmp/conf/
+## 
+## Acceptable values:
+##   - text
+snmp.config_dir = snmp/conf/
+
+## This is where the SNMP related databases and data gets
+## stored, it must be writable for the process.
+## 
+## Default: /var/db/snarl
+## 
+## Acceptable values:
+##   - text
+snmp.data_dir = /var/db/snarl
+
+{% if 'no_snarl_mdns' in group_names %}
+mdns.server = disabled
+{% endif %}

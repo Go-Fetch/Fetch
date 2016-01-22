@@ -1,0 +1,23 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Lookup version of LeoFS Manager
+  shell: "pkgin list | grep leo_manager | awk '{print $1}'"
+  register: leofs_version_installed
+  changed_when: "leofs_version_installed.stdout != '{{ leofs_manager_version_required }}'"
+  ignore_errors: True
+
+- include: install.yml
+  when: "leofs_version_installed.stdout != '{{ leofs_manager_version_required }}'"
+
+- name: Configure LeoFS Manager
+  template: src=leo_manager-config.j2 dest=/opt/local/leo_manager/etc/leo_manager.conf backup=yes
+  notify: Bounce LeoFS Manager
+
+- name: Enable EPMD
+  service: name=epmd state=started enabled=yes
+
+- name: Enable LeoFS Manager
+  service: name=leofs/manager state=started enabled=yes
+  notify: Pause For Startup

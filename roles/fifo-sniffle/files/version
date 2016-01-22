@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+snifflenode=$(awk -F "=" '/nodename/ {print $2}' /opt/local/fifo-sniffle/etc/sniffle.conf | tr -d ' ')
+cookie=$(awk -F "=" '/distributed_cookie/ {print $2}' /opt/local/fifo-sniffle/etc/sniffle.conf | tr -d ' ')
+erl -name "shell-$snifflenode" -setcookie $cookie -noshell \
+-eval "net_adm:ping('$snifflenode'), Version = rpc:call('$snifflenode', sniffle_version, v, []), io:format(\"~s~n\", [Version])." \
+-eval 'init:stop()' | awk -F"," '{print $1}' | tr -d '\r\n'

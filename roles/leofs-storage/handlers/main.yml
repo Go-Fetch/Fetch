@@ -1,0 +1,10 @@
+---
+# Kevin M. Meziere <kmeziere@jpcatholic.com>
+# Copyright 2015, John Paul the Great Catholic University
+
+- name: Bounce LeoFS Storage
+  service: name=leofs/storage state=restarted enabled=yes
+
+
+- name: Pause For Startup
+  pause: seconds=20
