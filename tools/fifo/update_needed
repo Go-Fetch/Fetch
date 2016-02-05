@@ -11,7 +11,7 @@ main (){
 
 	printf "\033[1mPackage\tConfigured \tAvailable\033[0m\n"
 
-	for PKG in howl snarl sniffle cerberus
+	for PKG in cerberus howl snarl sniffle
 	do
 		version=$(awk -F ":" '/'${PKG}'_version_required/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
 		rel=$(awk -F ":" '/'${PKG}'_release/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
@@ -21,6 +21,35 @@ main (){
 		else
 			needed=$(echo "${current}" | grep pkg/${rel}/fifo-${PKG})
 			printf "${RED}fifo-${PKG}\t${version}\t${needed}${NC}\n"
+		fi
+	done
+
+
+	for PKG in chunter # tachyon-meter
+	do
+		version=$(awk -F ":" '/'${PKG}'_version_required/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
+		version2=$PKG"-"$version
+		rel=$(awk -F ":" '/'${PKG}'_release/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
+		if [[ $current == *"gz/$rel/$version2"* ]]
+		then
+		  printf "${GRN}fifo-${PKG}\t${version2}\t${version2}${NC}\n"
+		else
+			needed=$(echo "${current}" | grep gz/${rel}/${PKG})
+			printf "${RED}fifo-${PKG}\t${version2}\t${needed}${NC}\n"
+		fi
+	done
+
+	for PKG in zlogin
+	do
+		version=$(awk -F ":" '/'${PKG}'_version_required/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
+		version2=$PKG"-"$version
+		rel=$(awk -F ":" '/'${PKG}'_release/ {print $2}' ../../roles/fifo-${PKG}/vars/main.yml | tr -d ' ')
+		if [[ $current == *"gz/$rel/fifo_$version2"* ]]
+		then
+		  printf "${GRN}fifo-${PKG}\t${version2}\t${version2}${NC}\n"
+		else
+			needed=$(echo "${current}" | grep gz/${rel}/fifo_${PKG})
+			printf "${RED}fifo-${PKG}\t${version2}\t${needed}${NC}\n"
 		fi
 	done
 
