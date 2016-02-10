@@ -78,17 +78,17 @@ host = config.get(active_config, 'host')
 user = config.get(active_config, 'user')
 pw = config.get(active_config, 'pass')
 
-unsafe = False
-if config.has_option(active_config, 'unsafe'):
-    if config.get(active_config, 'unsafe').lower() == "true":
-        unsafe = True
-
 token = False
 
 if config.has_option(active_config, 'token'):
     token = config.get(active_config, 'token')
 
-wiggle.init(host, user, pw, token, apiVersion, unsafe)
+insecure = False
+if config.has_option(active_config, 'insecure'):
+    if config.get(active_config, 'insecure').lower() == "true":
+        insecure = True
+
+wiggle.init(host, user, pw, token, apiVersion, insecure)
 #We check if we can get a valid token from wiggle and store it on our config
 if wiggle.get_token():
     config.set(active_config, 'token', wiggle.get_token())
